@@ -172,7 +172,14 @@
       t.setAttribute('aria-selected', active);
     });
     document.querySelectorAll('.calc-panel').forEach(p => {
-      p.classList.toggle('active', p.id === `panel-${tabId}`);
+      const active = p.id === `panel-${tabId}`;
+      p.classList.toggle('active', active);
+      p.setAttribute('aria-hidden', active ? 'false' : 'true');
+      if (active) {
+        p.removeAttribute('inert');
+      } else {
+        p.setAttribute('inert', '');
+      }
     });
   }
 
@@ -505,5 +512,6 @@
     initMobileMenu();
     initHeroCTA();
     initImageFallbacks();
+    switchTab('selisih');
   });
 })();

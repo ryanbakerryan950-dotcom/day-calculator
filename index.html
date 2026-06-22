@@ -35,12 +35,30 @@
     <div class="hero-calc">
       <div class="calc-card">
         <div class="calc-tabs" role="tablist">
-          <button class="calc-tab active" data-tab="selisih" role="tab" aria-selected="true">📅 Selisih Hari</button>
-          <button class="calc-tab" data-tab="tambah" role="tab">➕ Tambah/Kurang</button>
-          <button class="calc-tab" data-tab="mundur" role="tab">⏳ Hitung Mundur</button>
-          <button class="calc-tab" data-tab="hari" role="tab">📆 Hari dalam Seminggu</button>
-          <button class="calc-tab" data-tab="hijriah" role="tab">☪️ Hijriah</button>
-          <button class="calc-tab" data-tab="weton" role="tab">🌀 Weton</button>
+          <button class="calc-tab active" data-tab="selisih" role="tab" aria-selected="true" title="Selisih Hari">
+            <span class="calc-tab-icon" aria-hidden="true">📅</span>
+            <span class="calc-tab-label">Selisih Hari</span>
+          </button>
+          <button class="calc-tab" data-tab="tambah" role="tab" title="Tambah/Kurang">
+            <span class="calc-tab-icon" aria-hidden="true">➕</span>
+            <span class="calc-tab-label">Tambah/Kurang</span>
+          </button>
+          <button class="calc-tab" data-tab="mundur" role="tab" title="Hitung Mundur">
+            <span class="calc-tab-icon" aria-hidden="true">⏳</span>
+            <span class="calc-tab-label">Hitung Mundur</span>
+          </button>
+          <button class="calc-tab" data-tab="hari" role="tab" title="Hari dalam Seminggu">
+            <span class="calc-tab-icon" aria-hidden="true">📆</span>
+            <span class="calc-tab-label">Hari Minggu</span>
+          </button>
+          <button class="calc-tab" data-tab="hijriah" role="tab" title="Kalender Hijriah">
+            <span class="calc-tab-icon" aria-hidden="true">☪️</span>
+            <span class="calc-tab-label">Hijriah</span>
+          </button>
+          <button class="calc-tab" data-tab="weton" role="tab" title="Weton Jawa">
+            <span class="calc-tab-icon" aria-hidden="true">🌀</span>
+            <span class="calc-tab-label">Weton</span>
+          </button>
         </div>
 
         <div class="calc-body">
@@ -102,7 +120,7 @@
 
           <!-- Tab 3: Hitung Mundur -->
           <div class="calc-panel" id="panel-mundur">
-            <p class="panel-desc">Countdown</p>
+            <p class="panel-desc">Hitung Mundur</p>
             <div class="form-group">
               <label for="mundur-date">Target Tanggal</label>
               <input type="date" id="mundur-date">
@@ -137,7 +155,7 @@
 
           <!-- Tab 4: Hari dalam Seminggu -->
           <div class="calc-panel" id="panel-hari">
-            <p class="panel-desc">Day of Week Finder</p>
+            <p class="panel-desc">Hari dalam Seminggu</p>
             <div class="form-group">
               <label for="hari-date">Pilih Tanggal</label>
               <input type="date" id="hari-date">
@@ -151,7 +169,7 @@
 
           <!-- Tab 5: Hijriah -->
           <div class="calc-panel" id="panel-hijriah">
-            <p class="panel-desc">Gregorian ↔ Hijriah Converter</p>
+            <p class="panel-desc">Konverter Hijriah &amp; Gregorian</p>
             <div class="radio-group">
               <label class="radio-label">
                 <input type="radio" name="hijri-dir" value="g2h" checked>
@@ -206,7 +224,7 @@
 
           <!-- Tab 6: Weton -->
           <div class="calc-panel" id="panel-weton">
-            <p class="panel-desc">Weton Jawa Calculator</p>
+            <p class="panel-desc">Kalkulator Weton Jawa</p>
             <div class="form-group">
               <label for="weton-date">Tanggal Lahir</label>
               <input type="date" id="weton-date">
