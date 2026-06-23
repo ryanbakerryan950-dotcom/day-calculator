@@ -1551,12 +1551,30 @@ select:focus {
   color: var(--dark);
 }
 
+.cara-pakai-cta {
+  text-align: center;
+  margin-top: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease-out 0.8s, transform 0.55s ease-out 0.8s;
+}
+
+#cara-pakai.visible .cara-pakai-cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cara-pakai-cta .btn-cta {
+  margin: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   #cara-pakai .step-card,
   #cara-pakai .step-badge,
   #cara-pakai .step-icon-img,
   #cara-pakai .step-card h3,
-  #cara-pakai .step-card p {
+  #cara-pakai .step-card p,
+  #cara-pakai .cara-pakai-cta {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
@@ -1731,6 +1749,23 @@ select:focus {
 .mode-card:focus-visible .mode-card-cta {
   opacity: 1;
   transform: translateY(0);
+}
+
+.mode-cta {
+  text-align: center;
+  margin-top: 2.5rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease-out 1.35s, transform 0.55s ease-out 1.35s;
+}
+
+#mode.visible .mode-cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mode-cta .btn-cta {
+  margin: 0;
 }
 
 /* Mengapa */

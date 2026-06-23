@@ -103,13 +103,6 @@
       breadcrumb: [{ name: 'Beranda', url: SITE_URL + '/' }, { name: 'Penafian' }],
       robots: 'noindex, follow',
       schemas: ['breadcrumb']
-    },
-    sitemap: {
-      path: '/sitemap.html',
-      canonical: SITE_URL + '/sitemap.html',
-      breadcrumb: [{ name: 'Beranda', url: SITE_URL + '/' }, { name: 'Peta Situs' }],
-      robots: 'index, follow',
-      schemas: ['breadcrumb']
     }
   };
 
