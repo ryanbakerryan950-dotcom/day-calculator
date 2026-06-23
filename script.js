@@ -60,6 +60,408 @@
   let countdownInterval = null;
   let tambahOp = 'add';
   let tambahUnit = 'days';
+  const pdfResults = {};
+  const UNIT_LABELS = { days: 'Hari', weeks: 'Minggu', months: 'Bulan', years: 'Tahun' };
+  const OP_LABELS = { add: 'Tambah', sub: 'Kurangi' };
+
+  function hexToRgb(hex) {
+    const n = parseInt(hex.replace('#', ''), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+
+  function pdfTimestamp() {
+    return new Date().toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
+  }
+
+  function getJsPDF() {
+    const lib = window.jspdf?.jsPDF || window.jsPDF;
+    if (!lib) throw new Error('Pustaka PDF tidak tersedia. Muat ulang halaman lalu coba lagi.');
+    return lib;
+  }
+
+  function loadLogoDataUrl() {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = () => reject(new Error('logo unavailable'));
+      img.src = 'images/brand-logo.webp';
+    });
+  }
+
+  function pdfLineHeight(fontSize) {
+    return fontSize * 0.38;
+  }
+
+  function measureWrappedText(doc, text, maxWidth, fontSize, fontStyle = 'normal') {
+    doc.setFont('helvetica', fontStyle);
+    doc.setFontSize(fontSize);
+    const lines = doc.splitTextToSize(String(text || ''), maxWidth);
+    const lineHeight = pdfLineHeight(fontSize);
+    return { lines, lineHeight, height: Math.max(lineHeight, lines.length * lineHeight) };
+  }
+
+  function ensurePdfSpace(doc, y, needed, margin, pageW, pageH) {
+    if (y + needed <= pageH - 22) return y;
+    drawPdfFooter(doc, margin, pageW, pageH - 16);
+    doc.addPage();
+    drawPdfPageBg(doc, pageW, pageH);
+    return margin + 6;
+  }
+
+  function drawPdfPageBg(doc, pageW, pageH) {
+    doc.setFillColor(255, 255, 255);
+    doc.rect(0, 0, pageW, pageH, 'F');
+  }
+
+  async function drawPdfHeader(doc, margin, pageW, subtitle) {
+    const dark = hexToRgb('#0F172A');
+    const teal = hexToRgb('#0891B2');
+    const purple = hexToRgb('#1E4D6B');
+    const headerH = 48;
+
+    doc.setFillColor(dark[0], dark[1], dark[2]);
+    doc.rect(0, 0, pageW, headerH, 'F');
+    doc.setFillColor(purple[0], purple[1], purple[2]);
+    doc.rect(0, headerH - 18, pageW, 18, 'F');
+    doc.setFillColor(teal[0], teal[1], teal[2]);
+    doc.rect(0, headerH, pageW, 1.5, 'F');
+
+    try {
+      const logoData = await loadLogoDataUrl();
+      doc.addImage(logoData, 'PNG', margin, 11, 15, 16);
+    } catch (_) { /* logo optional */ }
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(17);
+    doc.text('KalkulatorHari', margin + 19, 20);
+
+    const sub = measureWrappedText(doc, subtitle, pageW - margin - 19, 9, 'normal');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(210, 225, 238);
+    doc.text(sub.lines, margin + 19, 28);
+
+    doc.setFontSize(7.5);
+    doc.setTextColor(180, 200, 215);
+    doc.text(`Dibuat: ${pdfTimestamp()}`, margin + 19, 40);
+
+    return headerH + 10;
+  }
+
+  function drawPdfFooter(doc, margin, pageW, footerY) {
+    const muted = [100, 116, 139];
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.3);
+    doc.line(margin, footerY, pageW - margin, footerY);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(muted[0], muted[1], muted[2]);
+    doc.text('Dihasilkan oleh KalkulatorHari — kalkulator tanggal Indonesia', margin, footerY + 5);
+    doc.text('Gratis · Instan · Tanpa daftar', pageW - margin, footerY + 5, { align: 'right' });
+  }
+
+  function drawBadge(doc, margin, y, text) {
+    const teal = hexToRgb('#0891B2');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    const textW = doc.getTextWidth(text);
+    const padX = 6;
+    const w = textW + padX * 2;
+    const h = 9;
+    doc.setFillColor(236, 254, 255);
+    doc.setDrawColor(teal[0], teal[1], teal[2]);
+    doc.setLineWidth(0.35);
+    doc.roundedRect(margin, y, w, h, 4.5, 4.5, 'FD');
+    doc.setTextColor(teal[0], teal[1], teal[2]);
+    doc.text(text, margin + padX, y + 6.2);
+    return y + h + 12;
+  }
+
+  function drawSectionTitle(doc, margin, y, title) {
+    const purple = hexToRgb('#1E4D6B');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(purple[0], purple[1], purple[2]);
+    doc.text(title, margin, y);
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.25);
+    doc.line(margin, y + 2, margin + 42, y + 2);
+    return y + 8;
+  }
+
+  function drawCards(doc, margin, y, contentW, cards) {
+    const gap = 6;
+    const pad = 6;
+    const labelGap = 5;
+    const colW = cards.length === 1 ? contentW : (contentW - gap * (cards.length - 1)) / cards.length;
+    const valueMaxW = colW - pad * 2;
+
+    const layouts = cards.map((card) => measureWrappedText(doc, card.value, valueMaxW, 9.5, 'bold'));
+    const cardH = Math.max(...layouts.map((m) => labelGap + m.height + pad * 2), 22);
+
+    cards.forEach((card, i) => {
+      const x = margin + i * (colW + gap);
+      const measure = layouts[i];
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.25);
+      doc.roundedRect(x, y, colW, cardH, 3, 3, 'FD');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text(card.label, x + pad, y + pad + 3);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text(measure.lines, x + pad, y + pad + labelGap + 4, {
+        lineHeightFactor: 1.35,
+        maxWidth: valueMaxW
+      });
+    });
+
+    return y + cardH + 10;
+  }
+
+  function drawNote(doc, margin, y, contentW, note) {
+    const pad = 6;
+    const measure = measureWrappedText(doc, note, contentW - pad * 2, 8, 'italic');
+    const boxH = measure.height + pad * 2;
+    const teal = hexToRgb('#0891B2');
+    doc.setFillColor(236, 254, 255);
+    doc.setDrawColor(teal[0], teal[1], teal[2]);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(margin, y, contentW, boxH, 3, 3, 'FD');
+    doc.setTextColor(teal[0], teal[1], teal[2]);
+    doc.text(measure.lines, margin + pad, y + pad + 3, { lineHeightFactor: 1.35 });
+    return y + boxH + 10;
+  }
+
+  function drawHighlight(doc, margin, y, contentW, highlight) {
+    const pad = 10;
+    const innerW = contentW - pad * 2;
+    const teal = hexToRgb('#0891B2');
+    const pink = hexToRgb('#DB2777');
+    const purple = hexToRgb('#1E4D6B');
+    const muted = [100, 116, 139];
+
+    const labelM = measureWrappedText(doc, highlight.label, innerW, 9, 'normal');
+    let contentH = labelM.height + 6;
+    let numM;
+    let unitM;
+    let valM;
+
+    if (highlight.unit) {
+      numM = measureWrappedText(doc, highlight.value, innerW, 26, 'bold');
+      unitM = measureWrappedText(doc, highlight.unit, innerW, 11, 'bold');
+      contentH += numM.height + 2 + unitM.height + 4;
+    } else {
+      valM = measureWrappedText(doc, highlight.value, innerW, 15, 'bold');
+      contentH += valM.height + 6;
+    }
+
+    const lineBlocks = (highlight.lines || []).map((line) => {
+      const m = measureWrappedText(doc, line, innerW, 9, 'normal');
+      contentH += m.height + 3;
+      return m;
+    });
+
+    const boxH = contentH + pad * 2;
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(teal[0], teal[1], teal[2]);
+    doc.setLineWidth(0.5);
+    doc.roundedRect(margin, y, contentW, boxH, 4, 4, 'FD');
+
+    let cy = y + pad + 4;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(muted[0], muted[1], muted[2]);
+    doc.text(labelM.lines, margin + pad, cy, { lineHeightFactor: 1.35, maxWidth: innerW });
+    cy += labelM.height + 6;
+
+    if (highlight.unit) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(26);
+      doc.setTextColor(pink[0], pink[1], pink[2]);
+      doc.text(numM.lines, margin + pad, cy, { lineHeightFactor: 1.2, maxWidth: innerW });
+      cy += numM.height + 2;
+      doc.setFontSize(11);
+      doc.setTextColor(purple[0], purple[1], purple[2]);
+      doc.text(unitM.lines, margin + pad, cy, { lineHeightFactor: 1.35, maxWidth: innerW });
+      cy += unitM.height + 4;
+    } else {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(15);
+      doc.setTextColor(purple[0], purple[1], purple[2]);
+      doc.text(valM.lines, margin + pad, cy, { lineHeightFactor: 1.35, maxWidth: innerW });
+      cy += valM.height + 4;
+    }
+
+    if (lineBlocks.length) {
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.2);
+      doc.line(margin + pad, cy - 2, margin + contentW - pad, cy - 2);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(purple[0], purple[1], purple[2]);
+      lineBlocks.forEach((m) => {
+        doc.text(m.lines, margin + pad, cy, { lineHeightFactor: 1.35, maxWidth: innerW });
+        cy += m.height + 3;
+      });
+    }
+
+    return y + boxH + 12;
+  }
+
+  function drawRows(doc, margin, y, contentW, rows) {
+    const labelColW = 38;
+    const pad = 5;
+    const valueMaxW = contentW - labelColW - pad * 2;
+
+    rows.forEach((row) => {
+      const valueM = measureWrappedText(doc, row.value, valueMaxW, 9.5, 'bold');
+      const rowH = Math.max(16, valueM.height + pad * 2);
+
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.25);
+      doc.roundedRect(margin, y, contentW, rowH, 2.5, 2.5, 'FD');
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      doc.text(row.label, margin + pad, y + pad + 3);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text(valueM.lines, margin + labelColW, y + pad + 3, {
+        lineHeightFactor: 1.35,
+        maxWidth: valueMaxW
+      });
+
+      y += rowH + 5;
+    });
+
+    return y + 4;
+  }
+
+  function drawBodyBlock(doc, margin, y, contentW, body) {
+    const pad = 8;
+    const measure = measureWrappedText(doc, body, contentW - pad * 2, 9.5, 'normal');
+    const boxH = measure.height + pad * 2;
+    const gold = hexToRgb('#CA8A04');
+
+    doc.setFillColor(255, 251, 235);
+    doc.setDrawColor(gold[0], gold[1], gold[2]);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(margin, y, contentW, boxH, 3, 3, 'FD');
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(51, 65, 85);
+    doc.text(measure.lines, margin + pad, y + pad + 3, {
+      lineHeightFactor: 1.4,
+      maxWidth: contentW - pad * 2
+    });
+
+    return y + boxH + 12;
+  }
+
+  function estimateRowsHeight(doc, contentW, rows) {
+    const labelColW = 38;
+    const valueMaxW = contentW - labelColW - 10;
+    return rows.reduce((sum, row) => {
+      const m = measureWrappedText(doc, row.value, valueMaxW, 9.5, 'bold');
+      return sum + Math.max(16, m.height + 10) + 5;
+    }, 14);
+  }
+
+  function estimateHighlightHeight(doc, contentW, highlight) {
+    const innerW = contentW - 20;
+    let h = 20;
+    h += measureWrappedText(doc, highlight.label, innerW, 9, 'normal').height + 6;
+    if (highlight.unit) {
+      h += measureWrappedText(doc, highlight.value, innerW, 26, 'bold').height + 2;
+      h += measureWrappedText(doc, highlight.unit, innerW, 11, 'bold').height + 8;
+    } else {
+      h += measureWrappedText(doc, highlight.value, innerW, 15, 'bold').height + 8;
+    }
+    (highlight.lines || []).forEach((line) => {
+      h += measureWrappedText(doc, line, innerW, 9, 'normal').height + 3;
+    });
+    return h + 12;
+  }
+
+  async function downloadResultPdf(mode) {
+    const data = pdfResults[mode];
+    if (!data) throw new Error('Hitung terlebih dahulu sebelum mengunduh PDF.');
+
+    const jsPDF = getJsPDF();
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 18;
+    const contentW = pageW - margin * 2;
+
+    drawPdfPageBg(doc, pageW, pageH);
+    let y = await drawPdfHeader(doc, margin, pageW, data.subtitle);
+    y = drawBadge(doc, margin, y, data.badge);
+
+    if (data.cards?.length) {
+      y = ensurePdfSpace(doc, y, 40, margin, pageW, pageH);
+      y = drawSectionTitle(doc, margin, y, data.cardsTitle || 'Input');
+      y = drawCards(doc, margin, y, contentW, data.cards);
+    }
+
+    if (data.note) {
+      y = ensurePdfSpace(doc, y, 20, margin, pageW, pageH);
+      y = drawNote(doc, margin, y, contentW, data.note);
+    }
+
+    if (data.highlight) {
+      y = ensurePdfSpace(doc, y, estimateHighlightHeight(doc, contentW, data.highlight), margin, pageW, pageH);
+      y = drawSectionTitle(doc, margin, y, 'Hasil Utama');
+      y = drawHighlight(doc, margin, y, contentW, data.highlight);
+    }
+
+    if (data.rows?.length) {
+      y = ensurePdfSpace(doc, y, estimateRowsHeight(doc, contentW, data.rows), margin, pageW, pageH);
+      y = drawSectionTitle(doc, margin, y, 'Detail Hasil');
+      y = drawRows(doc, margin, y, contentW, data.rows);
+    }
+
+    if (data.body) {
+      const bodyMeasure = measureWrappedText(doc, data.body, contentW - 16, 9.5, 'normal');
+      y = ensurePdfSpace(doc, y, bodyMeasure.height + 34, margin, pageW, pageH);
+      y = drawSectionTitle(doc, margin, y, 'Interpretasi Weton');
+      y = drawBodyBlock(doc, margin, y, contentW, data.body);
+    }
+
+    drawPdfFooter(doc, margin, pageW, pageH - 16);
+    doc.save(data.filename);
+  }
+
+  function initPdfDownloads() {
+    document.querySelector('.calc-body').addEventListener('click', async (e) => {
+      const btn = e.target.closest('.btn-pdf-download');
+      if (!btn) return;
+      btn.disabled = true;
+      try {
+        await downloadResultPdf(btn.dataset.pdfMode);
+      } catch (err) {
+        alert(err.message || 'Gagal membuat PDF. Silakan coba lagi.');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  }
 
   function todayISO() {
     const d = new Date();
@@ -247,6 +649,24 @@
       }
       document.getElementById('selisih-breakdown').innerHTML = parts.join('<br>');
 
+      pdfResults.selisih = {
+        subtitle: 'Laporan Hasil Perhitungan — Selisih Hari',
+        badge: 'SELISIH HARI',
+        filename: `hasil-selisih-hari-${startInput.value}-sd-${endInput.value}.pdf`,
+        cardsTitle: 'Rentang Tanggal',
+        cards: [
+          { label: 'Tanggal Mulai', value: formatDateID(start) },
+          { label: 'Tanggal Akhir', value: formatDateID(end) }
+        ],
+        note: workdaysOnly ? '* Perhitungan hanya hari kerja (Senin–Jumat)' : null,
+        highlight: {
+          label: 'Total Selisih',
+          value: total.toLocaleString('id-ID'),
+          unit: workdaysOnly ? 'hari kerja' : 'hari',
+          lines: parts
+        }
+      };
+
       resultArea.hidden = false;
     });
   }
@@ -294,6 +714,20 @@
       document.getElementById('tambah-result').textContent = formatDateID(result);
       document.getElementById('tambah-result-sub').textContent =
         `${result.getDate().toString().padStart(2, '0')}/${(result.getMonth() + 1).toString().padStart(2, '0')}/${result.getFullYear()}`;
+      pdfResults.tambah = {
+        subtitle: 'Laporan Hasil Perhitungan — Tambah/Kurang',
+        badge: 'TAMBAH / KURANG',
+        filename: `hasil-tambah-kurang-${document.getElementById('tambah-start').value}.pdf`,
+        cardsTitle: 'Input',
+        cards: [
+          { label: 'Tanggal Awal', value: formatDateID(start) },
+          { label: 'Operasi', value: `${OP_LABELS[tambahOp]} ${amount} ${UNIT_LABELS[tambahUnit]}` }
+        ],
+        highlight: {
+          label: 'Hasil Tanggal',
+          value: formatDateID(result)
+        }
+      };
       document.getElementById('result-tambah').hidden = false;
     });
   }
@@ -313,6 +747,25 @@
         eventName ? `Menuju: ${eventName}` : `Menuju: ${formatDateID(targetDate)}`;
       document.getElementById('countdown-wrap').hidden = false;
 
+      function updateMundurPdf(days, hours, minutes, seconds) {
+        pdfResults.mundur = {
+          subtitle: 'Laporan Hasil Perhitungan — Hitung Mundur',
+          badge: 'HITUNG MUNDUR',
+          filename: `hasil-hitung-mundur-${dateStr}.pdf`,
+          cardsTitle: 'Target',
+          cards: [
+            { label: 'Tanggal Target', value: formatDateID(targetDate) },
+            { label: 'Nama Acara', value: eventName || '—' }
+          ],
+          highlight: {
+            label: 'Sisa Waktu',
+            value: String(days),
+            unit: 'hari',
+            lines: [`${hours} jam · ${minutes} menit · ${seconds} detik`]
+          }
+        };
+      }
+
       function updateCountdown() {
         const now = new Date().getTime();
         const distance = targetDate.getTime() - now;
@@ -322,6 +775,7 @@
           document.getElementById('cd-hours').textContent = '0';
           document.getElementById('cd-minutes').textContent = '0';
           document.getElementById('cd-seconds').textContent = '0';
+          updateMundurPdf(0, '00', '00', '00');
           return;
         }
 
@@ -334,6 +788,12 @@
         document.getElementById('cd-hours').textContent = hours.toString().padStart(2, '0');
         document.getElementById('cd-minutes').textContent = minutes.toString().padStart(2, '0');
         document.getElementById('cd-seconds').textContent = seconds.toString().padStart(2, '0');
+        updateMundurPdf(
+          days,
+          hours.toString().padStart(2, '0'),
+          minutes.toString().padStart(2, '0'),
+          seconds.toString().padStart(2, '0')
+        );
       }
 
       updateCountdown();
@@ -348,6 +808,17 @@
       const date = parseDate(document.getElementById('hari-date').value);
       document.getElementById('hari-name').textContent = DAYS_ID[date.getDay()];
       document.getElementById('hari-full').textContent = formatDateID(date);
+      pdfResults.hari = {
+        subtitle: 'Laporan Hasil Perhitungan — Hari dalam Seminggu',
+        badge: 'HARI MINGGU',
+        filename: `hasil-hari-${document.getElementById('hari-date').value}.pdf`,
+        cardsTitle: 'Tanggal',
+        cards: [{ label: 'Tanggal Dipilih', value: formatDateID(date) }],
+        highlight: {
+          label: 'Hari',
+          value: DAYS_ID[date.getDay()]
+        }
+      };
       document.getElementById('result-hari').hidden = false;
     });
   }
@@ -372,6 +843,18 @@
         const h = toHijri(d.getFullYear(), d.getMonth() + 1, d.getDate());
         const mIdx = h.month - 1;
         html = `${h.day} ${hijriMonthsAr[mIdx]} (${hijriMonths[mIdx]})<br>${h.year} H`;
+        pdfResults.hijriah = {
+          subtitle: 'Laporan Hasil Perhitungan — Konverter Hijriah',
+          badge: 'KONVERSI HIJRIAH',
+          filename: `hasil-konversi-hijriah-${document.getElementById('hijri-g-date').value}.pdf`,
+          cardsTitle: 'Input',
+          cards: [{ label: 'Tanggal Gregorian', value: formatDateID(d) }],
+          highlight: {
+            label: 'Hasil Hijriah',
+            value: `${h.day} ${hijriMonths[mIdx]} ${h.year} H`,
+            lines: [hijriMonthsAr[mIdx]]
+          }
+        };
       } else {
         const hDay = parseInt(document.getElementById('hijri-h-day').value, 10);
         const hMonth = parseInt(document.getElementById('hijri-h-month').value, 10);
@@ -379,6 +862,17 @@
         const g = toGregorian(hYear, hMonth, hDay);
         const gDate = new Date(g.year, g.month - 1, g.day);
         html = `${formatDateID(gDate)}<br>${g.day} ${MONTHS_ID[g.month - 1]} ${g.year}`;
+        pdfResults.hijriah = {
+          subtitle: 'Laporan Hasil Perhitungan — Konverter Hijriah',
+          badge: 'KONVERSI HIJRIAH',
+          filename: `hasil-konversi-hijriah-${hYear}-${hMonth}-${hDay}.pdf`,
+          cardsTitle: 'Input',
+          cards: [{ label: 'Tanggal Hijriah', value: `${hDay} ${hijriMonths[hMonth - 1]} ${hYear} H` }],
+          highlight: {
+            label: 'Hasil Gregorian',
+            value: formatDateID(gDate)
+          }
+        };
       }
 
       document.getElementById('hijri-result').innerHTML = html;
@@ -399,6 +893,20 @@
       document.getElementById('weton-neptu').textContent = w.neptu;
       document.getElementById('weton-desc').textContent =
         wetonDescriptions[w.weton] || 'Memiliki karakter unik sesuai tradisi Jawa.';
+      pdfResults.weton = {
+        subtitle: 'Laporan Hasil Perhitungan — Weton Jawa',
+        badge: 'WETON JAWA',
+        filename: `hasil-weton-${document.getElementById('weton-date').value}.pdf`,
+        cardsTitle: 'Tanggal',
+        cards: [{ label: 'Tanggal Lahir', value: formatDateID(date) }],
+        rows: [
+          { label: 'Hari', value: w.hari },
+          { label: 'Pasaran', value: w.pasaran },
+          { label: 'Weton', value: w.weton },
+          { label: 'Neptu', value: String(w.neptu) }
+        ],
+        body: wetonDescriptions[w.weton] || 'Memiliki karakter unik sesuai tradisi Jawa.'
+      };
       document.getElementById('result-weton').hidden = false;
     });
   }
@@ -500,6 +1008,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     initTabs();
+    initPdfDownloads();
     initSelisih();
     initTambah();
     initMundur();

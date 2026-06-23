@@ -5,14 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kalkulator Hari 2026: Tanggal, Weton & Hitung Mundur</title>
   <meta name="description" content="Kalkulator Hari gratis: hitung selisih tanggal, hari kerja, hitung mundur, konversi Hijriah, dan Weton Jawa, hasil instan tanpa daftar.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Kalkulator Hari 2026: Tanggal, Weton & Hitung Mundur">
+  <meta property="og:description" content="Kalkulator Hari gratis: hitung selisih tanggal, hari kerja, hitung mundur, konversi Hijriah, dan Weton Jawa, hasil instan tanpa daftar.">
+  <meta property="og:image" content="images/brand-og.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="KalkulatorHari — kalkulator tanggal Indonesia untuk selisih hari, hitung mundur, Hijriah, dan Weton Jawa">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulator Hari 2026: Tanggal, Weton & Hitung Mundur">
+  <meta name="twitter:description" content="Kalkulator Hari gratis: hitung selisih tanggal, hari kerja, hitung mundur, konversi Hijriah, dan Weton Jawa, hasil instan tanpa daftar.">
+  <meta name="twitter:image" content="images/brand-og.webp">
   <meta name="keywords" content="kalkulator hari, kalkulator tanggal, hitung mundur, weton jawa, konversi hijriah">
-  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="images/favicon.png">
-  <link rel="apple-touch-icon" href="images/favicon.png">
+  <link rel="canonical" href="https://www.kalkulatorhari.com/">
+  <link rel="icon" type="image/webp" sizes="32x32" href="images/brand-favicon-32.webp">
+  <link rel="icon" type="image/webp" sizes="512x512" href="images/brand-favicon.webp">
+  <link rel="apple-touch-icon" href="images/brand-favicon.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="seo.js"></script>
 </head>
 <body>
 
@@ -20,7 +33,7 @@
   <header id="header">
     <div class="header-inner">
       <a href="#hero" class="logo">
-        <img src="images/logo.png" alt="" class="logo-img" width="52" height="35">
+        <img src="images/brand-logo.webp" alt="Logo KalkulatorHari" class="logo-img" width="37" height="40">
         <span>KalkulatorHari</span>
       </a>
       <nav class="nav" id="main-nav">
@@ -90,6 +103,12 @@
               <div class="result-number" id="selisih-total">0</div>
               <div class="result-label" id="selisih-label">hari</div>
               <div class="result-breakdown" id="selisih-breakdown"></div>
+              <button type="button" class="btn-pdf-download" data-pdf-mode="selisih" aria-label="Unduh hasil dalam PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
+                </svg>
+                Unduh PDF
+              </button>
             </div>
             <p class="error-msg" id="error-selisih" hidden>Tanggal akhir harus setelah tanggal mulai</p>
           </div>
@@ -120,6 +139,12 @@
               <div class="result-label">Hasil Tanggal</div>
               <div class="result-date" id="tambah-result"></div>
               <div class="result-sub" id="tambah-result-sub"></div>
+              <button type="button" class="btn-pdf-download" data-pdf-mode="tambah" aria-label="Unduh hasil dalam PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
+                </svg>
+                Unduh PDF
+              </button>
             </div>
           </div>
 
@@ -155,6 +180,12 @@
                   <div class="countdown-label">Detik</div>
                 </div>
               </div>
+              <button type="button" class="btn-pdf-download" data-pdf-mode="mundur" aria-label="Unduh hasil dalam PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
+                </svg>
+                Unduh PDF
+              </button>
             </div>
           </div>
 
@@ -169,6 +200,12 @@
             <div class="result-area" id="result-hari" hidden>
               <div class="result-day" id="hari-name"></div>
               <div class="result-sub" id="hari-full"></div>
+              <button type="button" class="btn-pdf-download" data-pdf-mode="hari" aria-label="Unduh hasil dalam PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
+                </svg>
+                Unduh PDF
+              </button>
             </div>
           </div>
 
@@ -223,6 +260,12 @@
             <button class="btn-primary" id="btn-hijriah">Konversi</button>
             <div class="result-area" id="result-hijriah" hidden>
               <div class="result-hijri" id="hijri-result"></div>
+              <button type="button" class="btn-pdf-download" data-pdf-mode="hijriah" aria-label="Unduh hasil dalam PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
+                </svg>
+                Unduh PDF
+              </button>
             </div>
             <p class="note-text">Mendukung perhitungan Ramadan, Idul Fitri, dan Idul Adha.</p>
           </div>
@@ -255,6 +298,12 @@
                 </div>
               </div>
               <p class="weton-desc" id="weton-desc"></p>
+              <button type="button" class="btn-pdf-download" data-pdf-mode="weton" aria-label="Unduh hasil dalam PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>
+                </svg>
+                Unduh PDF
+              </button>
             </div>
           </div>
 
@@ -353,8 +402,8 @@
             <div class="about-image-frame">
               <div class="about-image-wrapper">
                 <img
-                  src="images/tentang-kalkulator-hari.png"
-                  alt="Ilustrasi kalkulator tanggal dan kalender digital"
+                  src="images/tentang-hero-kalkulator.webp"
+                  alt="Bagian Tentang — ilustrasi kalkulator tanggal dan kalender digital Indonesia"
                   width="764"
                   height="1024"
                   loading="lazy"
@@ -385,7 +434,7 @@
         <div class="step-card">
           <div class="step-badge">1</div>
           <div class="step-icon-img">
-            <img src="images/step-pilih-mode.png" alt="Pilih mode kalkulator" width="256" height="256" loading="lazy" decoding="async">
+            <img src="images/cara-pilih-mode.webp" alt="Bagian Cara Menggunakan — langkah pilih mode kalkulator" width="256" height="256" loading="lazy" decoding="async">
           </div>
           <h3>Pilih Mode</h3>
           <p>Pertama, pilih jenis perhitungan yang Anda butuhkan seperti selisih tanggal, hitung mundur, weton, dan konversi hijriah.</p>
@@ -393,7 +442,7 @@
         <div class="step-card">
           <div class="step-badge">2</div>
           <div class="step-icon-img">
-            <img src="images/step-masukkan-tanggal.png" alt="Masukkan tanggal" width="256" height="256" loading="lazy" decoding="async">
+            <img src="images/cara-masukkan-tanggal.webp" alt="Bagian Cara Menggunakan — langkah masukkan tanggal" width="256" height="256" loading="lazy" decoding="async">
           </div>
           <h3>Masukkan Tanggal</h3>
           <p>Kemudian masukkan tanggal atau rentang tanggal yang dibutuhkan.</p>
@@ -401,7 +450,7 @@
         <div class="step-card">
           <div class="step-badge">3</div>
           <div class="step-icon-img">
-            <img src="images/step-lihat-hasil.png" alt="Lihat hasil perhitungan" width="256" height="256" loading="lazy" decoding="async">
+            <img src="images/cara-lihat-hasil.webp" alt="Bagian Cara Menggunakan — langkah lihat hasil perhitungan" width="256" height="256" loading="lazy" decoding="async">
           </div>
           <h3>Lihat Hasilnya</h3>
           <p>Klik tombol hitung dan lihat hasil detailnya sesuai dengan mode yang dipilih.</p>
@@ -419,7 +468,7 @@
       <div class="mode-grid">
         <article class="mode-card mode-card--selisih" data-tab="selisih" tabindex="0" role="button" aria-label="Buka mode Hitung Jumlah Hari Berlalu">
           <div class="mode-card-media">
-            <img src="images/mode-selisih.png" alt="Ilustrasi hitung jumlah hari berlalu" width="640" height="360" loading="lazy" decoding="async">
+            <img src="images/mode-selisih-hari.webp" alt="Bagian Mode Kalkulator — ilustrasi mode Selisih Hari" width="640" height="360" loading="lazy" decoding="async">
             <span class="mode-card-num">01</span>
           </div>
           <div class="mode-card-body">
@@ -430,7 +479,7 @@
         </article>
         <article class="mode-card mode-card--tambah" data-tab="tambah" tabindex="0" role="button" aria-label="Buka mode Penambahan dan Pengurangan Tanggal">
           <div class="mode-card-media">
-            <img src="images/mode-tambah.png" alt="Ilustrasi penambahan dan pengurangan tanggal" width="640" height="360" loading="lazy" decoding="async">
+            <img src="images/mode-tambah-kurang.webp" alt="Bagian Mode Kalkulator — ilustrasi mode Tambah dan Kurang Tanggal" width="640" height="360" loading="lazy" decoding="async">
             <span class="mode-card-num">02</span>
           </div>
           <div class="mode-card-body">
@@ -442,7 +491,7 @@
         </article>
         <article class="mode-card mode-card--mundur" data-tab="mundur" tabindex="0" role="button" aria-label="Buka mode Hitung Mundur Hari">
           <div class="mode-card-media">
-            <img src="images/mode-mundur.png" alt="Ilustrasi hitung mundur hari" width="640" height="360" loading="lazy" decoding="async">
+            <img src="images/mode-hitung-mundur.webp" alt="Bagian Mode Kalkulator — ilustrasi mode Hitung Mundur" width="640" height="360" loading="lazy" decoding="async">
             <span class="mode-card-num">03</span>
           </div>
           <div class="mode-card-body">
@@ -453,7 +502,7 @@
         </article>
         <article class="mode-card mode-card--hari" data-tab="hari" tabindex="0" role="button" aria-label="Buka mode Hari Dalam Seminggu Tanggal">
           <div class="mode-card-media">
-            <img src="images/mode-hari.png" alt="Ilustrasi hari dalam seminggu tanggal" width="640" height="360" loading="lazy" decoding="async">
+            <img src="images/mode-hari-seminggu.webp" alt="Bagian Mode Kalkulator — ilustrasi mode Hari dalam Seminggu" width="640" height="360" loading="lazy" decoding="async">
             <span class="mode-card-num">04</span>
           </div>
           <div class="mode-card-body">
@@ -464,7 +513,7 @@
         </article>
         <article class="mode-card mode-card--hijriah" data-tab="hijriah" tabindex="0" role="button" aria-label="Buka mode Konverter Dua Arah Hijriah dan Gregorian">
           <div class="mode-card-media">
-            <img src="images/mode-hijriah.png" alt="Ilustrasi konverter Hijriah dan Gregorian" width="640" height="360" loading="lazy" decoding="async">
+            <img src="images/mode-konverter-hijriah.webp" alt="Bagian Mode Kalkulator — ilustrasi mode Konverter Hijriah" width="640" height="360" loading="lazy" decoding="async">
             <span class="mode-card-num">05</span>
           </div>
           <div class="mode-card-body">
@@ -475,7 +524,7 @@
         </article>
         <article class="mode-card mode-card--weton" data-tab="weton" tabindex="0" role="button" aria-label="Buka mode Tradisional Jawa Weton Perencana">
           <div class="mode-card-media">
-            <img src="images/mode-weton.png" alt="Ilustrasi kalkulator Weton Jawa" width="640" height="360" loading="lazy" decoding="async">
+            <img src="images/mode-weton-jawa.webp" alt="Bagian Mode Kalkulator — ilustrasi mode Weton Jawa" width="640" height="360" loading="lazy" decoding="async">
             <span class="mode-card-num">06</span>
           </div>
           <div class="mode-card-body">
@@ -681,7 +730,7 @@
     <div class="container footer-grid">
       <div class="footer-col">
         <div class="footer-logo">
-          <img src="images/logo.png" alt="" class="logo-img" width="52" height="35">
+          <img src="images/brand-logo.webp" alt="Logo KalkulatorHari" class="logo-img" width="37" height="40">
           <span>KalkulatorHari</span>
         </div>
         <p class="footer-tagline">Kalkulator tanggal Indonesia #1 untuk semua kebutuhan Anda.</p>
@@ -715,6 +764,7 @@
           <li><a href="about-us.html">Tentang Kami</a></li>
           <li><a href="contact-us.html">Hubungi Kami</a></li>
           <li><a href="author.html">Penulis</a></li>
+          <li><a href="sitemap.html">Peta Situs</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -742,6 +792,7 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="vendor/jspdf.umd.min.js" defer></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
