@@ -451,6 +451,7 @@ a {
 input[type="date"],
 input[type="number"],
 input[type="text"],
+input[type="email"],
 select {
   border: 2px solid var(--light);
   border-radius: 8px;
@@ -2360,6 +2361,10 @@ select:focus {
   padding: 1.75rem;
 }
 
+.contact-info-card {
+  height: 343px;
+}
+
 .contact-info-card h2,
 .contact-form-card h2 {
   font-size: 1.15rem;
@@ -2387,22 +2392,67 @@ select:focus {
   margin-bottom: 1rem;
 }
 
-.contact-form-card textarea {
-  border: 2px solid var(--light);
-  border-radius: 8px;
-  padding: 10px 14px;
-  width: 100%;
-  font-family: 'Inter', sans-serif;
+.contact-form-card .form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
   color: var(--dark);
-  font-size: 0.9rem;
-  resize: vertical;
-  min-height: 120px;
-  transition: border-color 0.2s;
 }
 
+.contact-form-card input[type="text"],
+.contact-form-card input[type="email"],
+.contact-form-card select,
+.contact-form-card textarea {
+  display: block;
+  width: 100%;
+  border: 2px solid var(--light);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--dark);
+  background-color: var(--section-surface);
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.contact-form-card select {
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+.contact-form-card textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+
+.contact-form-card input[type="text"]:focus,
+.contact-form-card input[type="email"]:focus,
+.contact-form-card select:focus,
 .contact-form-card textarea:focus {
   outline: none;
   border-color: var(--purple);
+  background-color: var(--white);
+  box-shadow: 0 0 0 3px rgba(var(--purple-rgb), 0.08);
+}
+
+.contact-form-card input::placeholder,
+.contact-form-card textarea::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+.contact-form-card .btn-primary {
+  margin-top: 0.25rem;
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
 }
 
 .contact-status {
