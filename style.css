@@ -2158,11 +2158,6 @@ select:focus {
   fill: currentColor;
 }
 
-.footer-social-link[aria-label="Quora"] svg {
-  width: 0.9rem;
-  height: 1.05rem;
-}
-
 .footer-col h4 {
   color: var(--white);
   font-size: 0.9rem;

@@ -438,7 +438,7 @@
   }
 
   function initNavHighlight() {
-    const sections = ['hero', 'mode', 'faq', 'tentang', 'cara-pakai', 'mengapa'];
+    const sections = ['mode', 'tentang', 'cara-pakai', 'mengapa'];
     const navLinks = document.querySelectorAll('.nav-link');
 
     const observer = new IntersectionObserver((entries) => {
