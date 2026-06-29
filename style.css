@@ -209,6 +209,7 @@ a {
 
 /* Hero */
 #hero {
+  position: relative;
   min-height: auto;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
@@ -217,12 +218,23 @@ a {
   padding: 2.5rem max(1.25rem, calc((100% - 1320px) / 2));
   width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
   background: linear-gradient(
     160deg,
     var(--light) 35%,
     rgba(var(--teal-rgb), 0.1) 65%,
     rgba(var(--purple-rgb), 0.12) 100%
   );
+}
+
+#hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('images/hero-kalkulator-banner.webp') center / cover no-repeat;
+  opacity: 0.14;
+  pointer-events: none;
+  z-index: 0;
 }
 
 @media (min-width: 901px) {
@@ -244,6 +256,8 @@ a {
 
 .hero-calc {
   order: 2;
+  position: relative;
+  z-index: 1;
   min-width: 0;
   width: min(100%, 580px);
   max-width: 580px;
@@ -398,23 +412,28 @@ a {
 }
 
 .calc-body {
-  flex: 1;
-  display: grid;
   padding: 1.35rem 1.5rem 1.5rem;
 }
 
 .calc-panel {
-  grid-area: 1 / 1;
+  display: none;
   min-width: 0;
   width: 100%;
-  visibility: hidden;
-  pointer-events: none;
 }
 
 .calc-panel.active {
-  visibility: visible;
-  pointer-events: auto;
-  z-index: 1;
+  display: block;
+}
+
+.calc-panel.show-result .calc-form {
+  display: none;
+}
+
+.calc-panel.show-result .result-area:not([hidden]),
+.calc-panel.show-result .countdown-wrap:not([hidden]) {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
 }
 
 .panel-desc {
@@ -634,6 +653,27 @@ select:focus {
 
 .btn-pdf-download svg {
   flex-shrink: 0;
+}
+
+.btn-back-calc {
+  display: block;
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.7rem 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--purple);
+  background: var(--white);
+  border: 2px solid rgba(var(--purple-rgb), 0.25);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-back-calc:hover {
+  background: rgba(var(--purple-rgb), 0.06);
+  border-color: var(--purple);
 }
 
 .result-date {

@@ -83,22 +83,25 @@
 
           <!-- Tab 1: Selisih Hari -->
           <div class="calc-panel active" id="panel-selisih">
-            <p class="panel-desc">Hitung Jumlah Hari Berlalu</p>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="selisih-start">Tanggal Mulai</label>
-                <input type="date" id="selisih-start">
+            <div class="calc-form">
+              <p class="panel-desc">Hitung Jumlah Hari Berlalu</p>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="selisih-start">Tanggal Mulai</label>
+                  <input type="date" id="selisih-start">
+                </div>
+                <div class="form-group">
+                  <label for="selisih-end">Tanggal Akhir</label>
+                  <input type="date" id="selisih-end">
+                </div>
               </div>
-              <div class="form-group">
-                <label for="selisih-end">Tanggal Akhir</label>
-                <input type="date" id="selisih-end">
-              </div>
+              <label class="checkbox-label">
+                <input type="checkbox" id="selisih-workdays">
+                Hanya hari kerja (Senin–Jumat)
+              </label>
+              <button class="btn-primary" id="btn-selisih">Hitung</button>
+              <p class="error-msg" id="error-selisih" hidden>Tanggal akhir harus setelah tanggal mulai</p>
             </div>
-            <label class="checkbox-label">
-              <input type="checkbox" id="selisih-workdays">
-              Hanya hari kerja (Senin–Jumat)
-            </label>
-            <button class="btn-primary" id="btn-selisih">Hitung</button>
             <div class="result-area" id="result-selisih" hidden>
               <div class="result-number" id="selisih-total">0</div>
               <div class="result-label" id="selisih-label">hari</div>
@@ -109,32 +112,34 @@
                 </svg>
                 Unduh PDF
               </button>
+              <button type="button" class="btn-back-calc">Hitung Lagi</button>
             </div>
-            <p class="error-msg" id="error-selisih" hidden>Tanggal akhir harus setelah tanggal mulai</p>
           </div>
 
           <!-- Tab 2: Tambah/Kurang -->
           <div class="calc-panel" id="panel-tambah">
-            <p class="panel-desc">Penambahan &amp; Pengurangan Tanggal</p>
-            <div class="form-group">
-              <label for="tambah-start">Tanggal Awal</label>
-              <input type="date" id="tambah-start">
+            <div class="calc-form">
+              <p class="panel-desc">Penambahan &amp; Pengurangan Tanggal</p>
+              <div class="form-group">
+                <label for="tambah-start">Tanggal Awal</label>
+                <input type="date" id="tambah-start">
+              </div>
+              <div class="form-group">
+                <label for="tambah-amount">Jumlah Hari/Minggu/Bulan/Tahun</label>
+                <input type="number" id="tambah-amount" min="1" value="1">
+              </div>
+              <div class="toggle-group">
+                <button class="toggle-btn active" data-op="add" id="toggle-add">Tambah</button>
+                <button class="toggle-btn" data-op="sub" id="toggle-sub">Kurangi</button>
+              </div>
+              <div class="unit-selector">
+                <button class="unit-btn active" data-unit="days">Hari</button>
+                <button class="unit-btn" data-unit="weeks">Minggu</button>
+                <button class="unit-btn" data-unit="months">Bulan</button>
+                <button class="unit-btn" data-unit="years">Tahun</button>
+              </div>
+              <button class="btn-primary" id="btn-tambah">Hitung</button>
             </div>
-            <div class="form-group">
-              <label for="tambah-amount">Jumlah Hari/Minggu/Bulan/Tahun</label>
-              <input type="number" id="tambah-amount" min="1" value="1">
-            </div>
-            <div class="toggle-group">
-              <button class="toggle-btn active" data-op="add" id="toggle-add">Tambah</button>
-              <button class="toggle-btn" data-op="sub" id="toggle-sub">Kurangi</button>
-            </div>
-            <div class="unit-selector">
-              <button class="unit-btn active" data-unit="days">Hari</button>
-              <button class="unit-btn" data-unit="weeks">Minggu</button>
-              <button class="unit-btn" data-unit="months">Bulan</button>
-              <button class="unit-btn" data-unit="years">Tahun</button>
-            </div>
-            <button class="btn-primary" id="btn-tambah">Hitung</button>
             <div class="result-area" id="result-tambah" hidden>
               <div class="result-label">Hasil Tanggal</div>
               <div class="result-date" id="tambah-result"></div>
@@ -145,21 +150,24 @@
                 </svg>
                 Unduh PDF
               </button>
+              <button type="button" class="btn-back-calc">Hitung Lagi</button>
             </div>
           </div>
 
           <!-- Tab 3: Hitung Mundur -->
           <div class="calc-panel" id="panel-mundur">
-            <p class="panel-desc">Hitung Mundur</p>
-            <div class="form-group">
-              <label for="mundur-date">Target Tanggal</label>
-              <input type="date" id="mundur-date">
+            <div class="calc-form">
+              <p class="panel-desc">Hitung Mundur</p>
+              <div class="form-group">
+                <label for="mundur-date">Target Tanggal</label>
+                <input type="date" id="mundur-date">
+              </div>
+              <div class="form-group">
+                <label for="mundur-event">Nama Acara (opsional)</label>
+                <input type="text" id="mundur-event" placeholder="Contoh: Ulang Tahun">
+              </div>
+              <button class="btn-primary" id="btn-mundur">Mulai Hitung Mundur</button>
             </div>
-            <div class="form-group">
-              <label for="mundur-event">Nama Acara (opsional)</label>
-              <input type="text" id="mundur-event" placeholder="Contoh: Ulang Tahun">
-            </div>
-            <button class="btn-primary" id="btn-mundur">Mulai Hitung Mundur</button>
             <div class="countdown-wrap" id="countdown-wrap" hidden>
               <p class="countdown-event" id="countdown-event"></p>
               <div class="countdown-grid">
@@ -186,17 +194,20 @@
                 </svg>
                 Unduh PDF
               </button>
+              <button type="button" class="btn-back-calc">Hitung Lagi</button>
             </div>
           </div>
 
           <!-- Tab 4: Hari dalam Seminggu -->
           <div class="calc-panel" id="panel-hari">
-            <p class="panel-desc">Hari dalam Seminggu</p>
-            <div class="form-group">
-              <label for="hari-date">Pilih Tanggal</label>
-              <input type="date" id="hari-date">
+            <div class="calc-form">
+              <p class="panel-desc">Hari dalam Seminggu</p>
+              <div class="form-group">
+                <label for="hari-date">Pilih Tanggal</label>
+                <input type="date" id="hari-date">
+              </div>
+              <button class="btn-primary" id="btn-hari">Cari Hari</button>
             </div>
-            <button class="btn-primary" id="btn-hari">Cari Hari</button>
             <div class="result-area" id="result-hari" hidden>
               <div class="result-day" id="hari-name"></div>
               <div class="result-sub" id="hari-full"></div>
@@ -206,58 +217,62 @@
                 </svg>
                 Unduh PDF
               </button>
+              <button type="button" class="btn-back-calc">Hitung Lagi</button>
             </div>
           </div>
 
           <!-- Tab 5: Hijriah -->
           <div class="calc-panel" id="panel-hijriah">
-            <p class="panel-desc">Konverter Hijriah &amp; Gregorian</p>
-            <div class="radio-group">
-              <label class="radio-label">
-                <input type="radio" name="hijri-dir" value="g2h" checked>
-                Gregorian → Hijriah
-              </label>
-              <label class="radio-label">
-                <input type="radio" name="hijri-dir" value="h2g">
-                Hijriah → Gregorian
-              </label>
-            </div>
-            <div id="hijri-g-input">
-              <div class="form-group">
-                <label for="hijri-g-date">Tanggal Gregorian</label>
-                <input type="date" id="hijri-g-date">
+            <div class="calc-form">
+              <p class="panel-desc">Konverter Hijriah &amp; Gregorian</p>
+              <div class="radio-group">
+                <label class="radio-label">
+                  <input type="radio" name="hijri-dir" value="g2h" checked>
+                  Gregorian → Hijriah
+                </label>
+                <label class="radio-label">
+                  <input type="radio" name="hijri-dir" value="h2g">
+                  Hijriah → Gregorian
+                </label>
               </div>
-            </div>
-            <div id="hijri-h-input" hidden>
-              <div class="form-row">
+              <div id="hijri-g-input">
                 <div class="form-group">
-                  <label for="hijri-h-day">Hari</label>
-                  <input type="number" id="hijri-h-day" min="1" max="30" value="1">
-                </div>
-                <div class="form-group">
-                  <label for="hijri-h-month">Bulan</label>
-                  <select id="hijri-h-month">
-                    <option value="1">Muharram</option>
-                    <option value="2">Safar</option>
-                    <option value="3">Rabi al-Awwal</option>
-                    <option value="4">Rabi al-Tsani</option>
-                    <option value="5">Jumadil Awal</option>
-                    <option value="6">Jumadil Akhir</option>
-                    <option value="7">Rajab</option>
-                    <option value="8">Sya'ban</option>
-                    <option value="9">Ramadan</option>
-                    <option value="10">Syawal</option>
-                    <option value="11">Dzulqa'dah</option>
-                    <option value="12">Dzulhijjah</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="hijri-h-year">Tahun</label>
-                  <input type="number" id="hijri-h-year" min="1" value="1447">
+                  <label for="hijri-g-date">Tanggal Gregorian</label>
+                  <input type="date" id="hijri-g-date">
                 </div>
               </div>
+              <div id="hijri-h-input" hidden>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="hijri-h-day">Hari</label>
+                    <input type="number" id="hijri-h-day" min="1" max="30" value="1">
+                  </div>
+                  <div class="form-group">
+                    <label for="hijri-h-month">Bulan</label>
+                    <select id="hijri-h-month">
+                      <option value="1">Muharram</option>
+                      <option value="2">Safar</option>
+                      <option value="3">Rabi al-Awwal</option>
+                      <option value="4">Rabi al-Tsani</option>
+                      <option value="5">Jumadil Awal</option>
+                      <option value="6">Jumadil Akhir</option>
+                      <option value="7">Rajab</option>
+                      <option value="8">Sya'ban</option>
+                      <option value="9">Ramadan</option>
+                      <option value="10">Syawal</option>
+                      <option value="11">Dzulqa'dah</option>
+                      <option value="12">Dzulhijjah</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="hijri-h-year">Tahun</label>
+                    <input type="number" id="hijri-h-year" min="1" value="1447">
+                  </div>
+                </div>
+              </div>
+              <button class="btn-primary" id="btn-hijriah">Konversi</button>
+              <p class="note-text">Mendukung perhitungan Ramadan, Idul Fitri, dan Idul Adha.</p>
             </div>
-            <button class="btn-primary" id="btn-hijriah">Konversi</button>
             <div class="result-area" id="result-hijriah" hidden>
               <div class="result-hijri" id="hijri-result"></div>
               <button type="button" class="btn-pdf-download" data-pdf-mode="hijriah" aria-label="Unduh hasil dalam PDF">
@@ -266,18 +281,20 @@
                 </svg>
                 Unduh PDF
               </button>
+              <button type="button" class="btn-back-calc">Hitung Lagi</button>
             </div>
-            <p class="note-text">Mendukung perhitungan Ramadan, Idul Fitri, dan Idul Adha.</p>
           </div>
 
           <!-- Tab 6: Weton -->
           <div class="calc-panel" id="panel-weton">
-            <p class="panel-desc">Kalkulator Weton Jawa</p>
-            <div class="form-group">
-              <label for="weton-date">Tanggal Lahir</label>
-              <input type="date" id="weton-date">
+            <div class="calc-form">
+              <p class="panel-desc">Kalkulator Weton Jawa</p>
+              <div class="form-group">
+                <label for="weton-date">Tanggal Lahir</label>
+                <input type="date" id="weton-date">
+              </div>
+              <button class="btn-primary" id="btn-weton">Hitung Weton</button>
             </div>
-            <button class="btn-primary" id="btn-weton">Hitung Weton</button>
             <div class="result-area" id="result-weton" hidden>
               <div class="weton-grid">
                 <div class="weton-item">
@@ -304,6 +321,7 @@
                 </svg>
                 Unduh PDF
               </button>
+              <button type="button" class="btn-back-calc">Hitung Lagi</button>
             </div>
           </div>
 
@@ -318,7 +336,6 @@
       <a href="#mode" class="hero-link">Dapatkan kalender lengkap tahun 2026 →</a>
     </div>
   </section>
-
 
   <!-- Tentang -->
   <section id="tentang" class="section reveal tentang-section">
@@ -757,7 +774,7 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.719-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.719 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.348-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.746-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z"/></svg>
           </a>
           <a href="https://quora.com/" class="footer-social-link" aria-label="Quora" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.738 18.701c-.831-1.635-1.858-3.127-2.752-4.7h-.006c-1.01-1.658-1.858-3.127-2.541-5.018 1.088-1.573 2.53-2.576 4.41-2.576 3.398 0 5.762 2.842 5.762 6.961 0 4.176-2.418 7.047-5.873 7.047-1.297 0-2.56-.394-3.537-1.066l3.637 2.352zm5.455-16.78C16.531 1.018 14.251 0 11.88 0 5.305 0 .001 5.305.001 11.88c0 6.574 5.304 11.878 11.879 11.878 6.574 0 11.879-5.304 11.879-11.879 0-3.371-1.403-6.417-3.665-8.578z"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.3799.9483A11.9628 11.9628 0 0 1 21.248 19.5397l2.4096 2.4225c.7322.7362.21 1.9905-.8272 1.9905l-10.7105.01a12.52 12.52 0 0 1-.304 0h-.02A11.9628 11.9628 0 0 1 7.3818.9503Zm7.3217 4.428a7.1717 7.1717 0 1 0-5.4873 13.2512 7.1717 7.1717 0 0 0 5.4883-13.2511Z"/></svg>
           </a>
           <a href="https://reddit.com/" class="footer-social-link" aria-label="Reddit" target="_blank" rel="noopener noreferrer">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
@@ -786,9 +803,6 @@
           <li><a href="#hero" data-tab-link="selisih">Selisih Hari</a></li>
           <li><a href="#hero" data-tab-link="tambah">Tambah/Kurang</a></li>
           <li><a href="#hero" data-tab-link="mundur">Hitung Mundur</a></li>
-          <li><a href="#hero" data-tab-link="hari">Hari dalam Seminggu</a></li>
-          <li><a href="#hero" data-tab-link="hijriah">Konverter Hijriah</a></li>
-          <li><a href="#hero" data-tab-link="weton">Weton Jawa</a></li>
         </ul>
       </div>
     </div>

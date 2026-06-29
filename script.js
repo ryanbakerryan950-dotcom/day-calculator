@@ -567,7 +567,33 @@
     return { totalDays, weeks, remainDays, years, months, days };
   }
 
+  function resetPanelResult(panel) {
+    panel.classList.remove('show-result');
+    panel.querySelectorAll('.result-area, .countdown-wrap').forEach(el => {
+      el.hidden = true;
+    });
+    if (panel.id === 'panel-mundur' && countdownInterval) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+  }
+
+  function showPanelResult(panel, resultEl) {
+    panel.classList.add('show-result');
+    resultEl.hidden = false;
+  }
+
+  function initResultBackButtons() {
+    document.querySelectorAll('.btn-back-calc').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const panel = btn.closest('.calc-panel');
+        if (panel) resetPanelResult(panel);
+      });
+    });
+  }
+
   function switchTab(tabId) {
+    document.querySelectorAll('.calc-panel').forEach(p => resetPanelResult(p));
     document.querySelectorAll('.calc-tab').forEach(t => {
       const active = t.dataset.tab === tabId;
       t.classList.toggle('active', active);
@@ -628,7 +654,7 @@
       const end = parseDate(endInput.value);
 
       if (end < start) {
-        resultArea.hidden = true;
+        resetPanelResult(document.getElementById('panel-selisih'));
         errorEl.hidden = false;
         return;
       }
@@ -667,7 +693,7 @@
         }
       };
 
-      resultArea.hidden = false;
+      showPanelResult(document.getElementById('panel-selisih'), resultArea);
     });
   }
 
@@ -728,7 +754,7 @@
           value: formatDateID(result)
         }
       };
-      document.getElementById('result-tambah').hidden = false;
+      showPanelResult(document.getElementById('panel-tambah'), document.getElementById('result-tambah'));
     });
   }
 
@@ -745,7 +771,7 @@
 
       document.getElementById('countdown-event').textContent =
         eventName ? `Menuju: ${eventName}` : `Menuju: ${formatDateID(targetDate)}`;
-      document.getElementById('countdown-wrap').hidden = false;
+      showPanelResult(document.getElementById('panel-mundur'), document.getElementById('countdown-wrap'));
 
       function updateMundurPdf(days, hours, minutes, seconds) {
         pdfResults.mundur = {
@@ -819,7 +845,7 @@
           value: DAYS_ID[date.getDay()]
         }
       };
-      document.getElementById('result-hari').hidden = false;
+      showPanelResult(document.getElementById('panel-hari'), document.getElementById('result-hari'));
     });
   }
 
@@ -876,7 +902,7 @@
       }
 
       document.getElementById('hijri-result').innerHTML = html;
-      document.getElementById('result-hijriah').hidden = false;
+      showPanelResult(document.getElementById('panel-hijriah'), document.getElementById('result-hijriah'));
     });
   }
 
@@ -907,7 +933,7 @@
         ],
         body: wetonDescriptions[w.weton] || 'Memiliki karakter unik sesuai tradisi Jawa.'
       };
-      document.getElementById('result-weton').hidden = false;
+      showPanelResult(document.getElementById('panel-weton'), document.getElementById('result-weton'));
     });
   }
 
@@ -1008,6 +1034,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     initTabs();
+    initResultBackButtons();
     initPdfDownloads();
     initSelisih();
     initTambah();
